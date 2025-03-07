@@ -89,15 +89,22 @@ class Python_Code_Generator_Tool(BaseTool):
     def preprocess_code(code):
         """
         Preprocesses the generated code snippet by extracting it from the response.
+        Returns only the first Python code block found.
 
         Parameters:
             code (str): The response containing the code snippet.
 
         Returns:
-            str: The extracted code snippet.
+            str: The extracted code snippet from the first Python block.
+            
+        Raises:
+            ValueError: If no Python code block is found.
         """
-        code = re.search(r"```python(.*)```", code, re.DOTALL).group(1).strip()
-        return code
+        # Look for the first occurrence of a Python code block
+        match = re.search(r"```python\s*(.*?)\s*```", code, re.DOTALL)
+        if not match:
+            raise ValueError("No Python code block found in the response")
+        return match.group(1).strip()
 
     @contextlib.contextmanager
     def capture_output(self):
