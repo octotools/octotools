@@ -1,15 +1,15 @@
-easyocr==1.7.1
-openai==1.58.1
-python-dotenv==1.0.1
-wikipedia==1.4.0
-pillow==10.4.0
-platformdirs==4.2.2
-sympy==1.13.2
-tenacity==9.0.0
 diskcache==5.6.3
-transformers==4.44.2
-pymed==0.8.9
+easyocr==1.7.2
 metapub==0.5.12
+openai==1.64.0
+pillow==11.1.0
+platformdirs==4.3.6
+pymed==0.8.9
+python-dotenv==1.0.1
+sympy==1.13.1
+tenacity==9.0.0
+transformers==4.49.0
+wikipedia==1.4.0
 
 # numpy==2.1.0
 # sympy==1.13.2
