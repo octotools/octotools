@@ -204,7 +204,7 @@ class Solver:
                         tool_name, 
                         self.planner.toolbox_metadata[tool_name]
                     )
-                    analysis, explanation, command = self.executor.extract_explanation_and_command(tool_command)
+                    explanation, command = self.executor.extract_explanation_and_command(tool_command)
                     
                     if self.verbose:
                         print(f"\n## [{step_count}] Tool Command:")
