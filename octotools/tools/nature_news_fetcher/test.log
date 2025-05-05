@@ -1,105 +1,106 @@
 {'tool_name': 'Nature_News_Fetcher_Tool', 'tool_description': 'A tool that fetches the latest news articles from Nature.', 'tool_version': '1.0.0', 'input_types': {'num_articles': 'int - The number of articles to fetch (default: 100).', 'max_pages': 'int - The maximum number of pages to fetch (default: 5).'}, 'output_type': 'list - A list of dictionaries containing information about the latest Nature news articles.', 'demo_commands': [{'command': 'execution = tool.execute()', 'description': 'Fetch the latest 100 news articles from Nature.'}, {'command': 'execution = tool.execute(num_articles=50, max_pages=3)', 'description': 'Fetch the latest 50 news articles from Nature, searching up to 3 pages.'}], 'require_llm_engine': False}
 [
     {
-        "title": "NASA embraced diversity. Trump\u2019s DEI purge is hitting space scientists hard",
-        "url": "https://www.nature.com/articles/d41586-025-00480-x",
-        "description": "Some researchers at NASA and outside it feel betrayed by the changes at the agency, which was known for promoting inclusion in science.",
+        "title": "Fungus from the human gut slows liver disease in mice",
+        "url": "https://www.nature.com/articles/d41586-025-01360-0",
+        "description": "The disease affects almost one-third of adults and treatments are limited.",
+        "authors": [
+            "Rita Aksenfeld"
+        ],
+        "date": "2025-05-02",
+        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-01360-0/d41586-025-01360-0_50931170.jpg"
+    },
+    {
+        "title": "AI scientist \u2018team\u2019 joins the search for extraterrestrial life",
+        "url": "https://www.nature.com/articles/d41586-025-01364-w",
+        "description": "The collaborative system generated more than 100 hypotheses relating to the origins of life in the Universe.",
+        "authors": [
+            "Celeste Biever"
+        ],
+        "date": "2025-05-02",
+        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-01364-w/d41586-025-01364-w_50941052.jpg"
+    },
+    {
+        "title": "Trump gutted two landmark environmental reports \u2014 can researchers save them?",
+        "url": "https://www.nature.com/articles/d41586-025-01395-3",
+        "description": "Scientists working on disrupted national climate and nature assessments aren\u2019t giving up.",
         "authors": [
             "Alexandra Witze"
         ],
-        "date": "2025-02-14",
-        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-00480-x/d41586-025-00480-x_50636314.jpg"
+        "date": "2025-05-02",
+        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-01395-3/d41586-025-01395-3_50941070.jpg"
     },
     {
-        "title": "Are the Trump team\u2019s actions affecting your research? How to contact Nature",
-        "url": "https://www.nature.com/articles/d41586-025-00479-4",
-        "description": "Use this form to share information with Nature\u2019s news team, or to make suggestions for future coverage.",
+        "title": "Blood of man who\u2019s had 200 snake bites helps make a potent antivenom",
+        "url": "https://www.nature.com/articles/d41586-025-01325-3",
+        "description": "Treatment combines existing drug with antibodies from hyper-immune reptile collector, raising both hopes and ethical concerns.",
         "authors": [
-            "No authors found"
+            "Katherine Bourzac"
         ],
-        "date": "2025-02-13",
-        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-00479-4/d41586-025-00479-4_50626000.jpg"
+        "date": "2025-05-02",
+        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-01325-3/d41586-025-01325-3_50931088.jpg"
     },
     {
-        "title": "Scientists use AI to design life-like enzymes from scratch",
-        "url": "https://www.nature.com/articles/d41586-025-00488-3",
-        "description": "Combined approach takes AI-engineered enzymes one step closer to practical applications.",
-        "authors": [
-            "Miryam Naddaf"
-        ],
-        "date": "2025-02-13",
-        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-00488-3/d41586-025-00488-3_50636094.jpg"
-    },
-    {
-        "title": "Royal Society will meet amid campaign to revoke Elon Musk\u2019s fellowship",
-        "url": "https://www.nature.com/articles/d41586-025-00486-5",
-        "description": "More than 1,300 scientists have signed a letter calling on the world\u2019s oldest science society to reassess the billionaire\u2019s membership following cuts to US science.",
+        "title": "Star ecologist \u2018blurred boundaries\u2019 in lab \u2014 but colleagues criticize investigation",
+        "url": "https://www.nature.com/articles/d41586-025-01363-x",
+        "description": "A report into Thomas Crowther\u2019s conduct at ETH Zurich finds that the professor breached some internal rules, but clears him of misusing funds.",
         "authors": [
             "Holly Else"
         ],
-        "date": "2025-02-13",
-        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-00486-5/d41586-025-00486-5_50635956.jpg"
+        "date": "2025-05-02",
+        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-01363-x/d41586-025-01363-x_50938120.jpg"
     },
     {
-        "title": "Vaccine sceptic RFK Jr is now a powerful force in US science: what will he do?",
-        "url": "https://www.nature.com/articles/d41586-025-00439-y",
-        "description": "Kennedy has expressed support for some fields, but has also declared he\u2019d like a \u2018break\u2019 in infectious-disease research.",
+        "title": "Trump proposes unprecedented budget cuts to US science",
+        "url": "https://www.nature.com/articles/d41586-025-01397-1",
+        "description": "Huge reductions, if enacted, could have \u2018catastrophic\u2019 effects on US competitiveness and the scientific pipeline, critics say.",
         "authors": [
-            "Amanda Heidt",
-            "Heidi Ledford"
+            "Jeff Tollefson",
+            "Dan Garisto",
+            "Alexandra Witze"
         ],
-        "date": "2025-02-13",
-        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-00439-y/d41586-025-00439-y_50621992.jpg"
+        "date": "2025-05-02",
+        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-01397-1/d41586-025-01397-1_50941252.jpg"
     },
     {
-        "title": "Are PhDs losing their lustre? Why fewer students are enrolling in doctoral degrees",
-        "url": "https://www.nature.com/articles/d41586-025-00425-4",
-        "description": "High living costs paired with stagnant stipends are being blamed for a drop in PhD enrolments in several countries.",
-        "authors": [
-            "Diana Kwon"
-        ],
-        "date": "2025-02-13",
-        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-00425-4/d41586-025-00425-4_50621644.jpg"
-    },
-    {
-        "title": "Quantum-computing technology that makes qubits from atoms wins mega investment",
-        "url": "https://www.nature.com/articles/d41586-025-00451-2",
-        "description": "Firms using \u2018neutral atoms\u2019 to create qubits are reentering the race to build useful quantum machines.",
-        "authors": [
-            "Elizabeth Gibney"
-        ],
-        "date": "2025-02-13",
-        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-00451-2/d41586-025-00451-2_50636260.jpg"
-    },
-    {
-        "title": "Cheap blood test detects pancreatic cancer before it spreads",
-        "url": "https://www.nature.com/articles/d41586-025-00438-z",
-        "description": "The deadly cancer is often not found until it has spread to other parts of the body.",
-        "authors": [
-            "Smriti Mallapaty"
-        ],
-        "date": "2025-02-12",
-        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-00438-z/d41586-025-00438-z_50621748.jpg"
-    },
-    {
-        "title": "How centuries of isolation shaped Greenlanders\u2019 unique genetics",
-        "url": "https://www.nature.com/articles/d41586-025-00443-2",
-        "description": "Centuries of isolation have given Greenlanders a genetic profile that includes Arctic-specific variants.",
-        "authors": [
-            "Freda Kreier"
-        ],
-        "date": "2025-02-12",
-        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-00443-2/d41586-025-00443-2_50625480.jpg"
-    },
-    {
-        "title": "Record-breaking neutrino is most energetic ever detected",
-        "url": "https://www.nature.com/articles/d41586-025-00444-1",
-        "description": "Although still under construction, the sea-floor KM3NeT detector spotted a neutrino 20 times more powerful than any previously detected.",
+        "title": "Revealed: the unusual mathematics that gives rose petals their shape",
+        "url": "https://www.nature.com/articles/d41586-025-01394-4",
+        "description": "The pointy edges of petals rely on a type of geometric feedback never before seen in nature.",
         "authors": [
             "Davide Castelvecchi"
         ],
-        "date": "2025-02-12",
-        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-00444-1/d41586-025-00444-1_50625568.jpg"
+        "date": "2025-05-01",
+        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-01394-4/d41586-025-01394-4_50937968.jpg"
+    },
+    {
+        "title": "Powerful protein editors offer new ways of probing living cells",
+        "url": "https://www.nature.com/articles/d41586-025-01358-8",
+        "description": "Scientists deploy self-splicing protein subunits to insert strange new additions into target proteins.",
+        "authors": [
+            "Asher Mullard"
+        ],
+        "date": "2025-05-01",
+        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-01358-8/d41586-025-01358-8_50931568.jpg"
+    },
+    {
+        "title": "Exclusive: NSF stops awarding new grants and funding existing ones",
+        "url": "https://www.nature.com/articles/d41586-025-01396-2",
+        "description": "US science funder also plans to screen grant applications for compliance with \u2018agency priorities\u2019.",
+        "authors": [
+            "Dan Garisto"
+        ],
+        "date": "2025-05-01",
+        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-01396-2/d41586-025-01396-2_50938180.jpg"
+    },
+    {
+        "title": "Nickel production is notoriously dirty \u2014 here\u2019s how to make it greener",
+        "url": "https://www.nature.com/articles/d41586-025-01356-w",
+        "description": "If scaled up, a method for extracting nickel without using carbon-rich coke could reduce emissions considerably.",
+        "authors": [
+            "Davide Castelvecchi"
+        ],
+        "date": "2025-04-30",
+        "image_url": "https://media.springernature.com/w290h158/magazine-assets/d41586-025-01356-w/d41586-025-01356-w_50931426.jpg"
     }
 ]
 
@@ -108,73 +109,73 @@ Number of articles fetched: 10
 
 Sample articles:
 
-1. Title: NASA embraced diversity. Trump’s DEI purge is hitting space scientists hard
-   URL: https://www.nature.com/articles/d41586-025-00480-x
-   Description: Some researchers at NASA and outside it feel betrayed by the changes at the agency, which was known ...
+1. Title: Fungus from the human gut slows liver disease in mice
+   URL: https://www.nature.com/articles/d41586-025-01360-0
+   Description: The disease affects almost one-third of adults and treatments are limited....
+   Authors: Rita Aksenfeld
+   Date: 2025-05-02
+   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-01360-0/d41586-025-01360-0_50931170.jpg
+
+2. Title: AI scientist ‘team’ joins the search for extraterrestrial life
+   URL: https://www.nature.com/articles/d41586-025-01364-w
+   Description: The collaborative system generated more than 100 hypotheses relating to the origins of life in the U...
+   Authors: Celeste Biever
+   Date: 2025-05-02
+   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-01364-w/d41586-025-01364-w_50941052.jpg
+
+3. Title: Trump gutted two landmark environmental reports — can researchers save them?
+   URL: https://www.nature.com/articles/d41586-025-01395-3
+   Description: Scientists working on disrupted national climate and nature assessments aren’t giving up....
    Authors: Alexandra Witze
-   Date: 2025-02-14
-   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-00480-x/d41586-025-00480-x_50636314.jpg
+   Date: 2025-05-02
+   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-01395-3/d41586-025-01395-3_50941070.jpg
 
-2. Title: Are the Trump team’s actions affecting your research? How to contact Nature
-   URL: https://www.nature.com/articles/d41586-025-00479-4
-   Description: Use this form to share information with Nature’s news team, or to make suggestions for future covera...
-   Authors: No authors found
-   Date: 2025-02-13
-   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-00479-4/d41586-025-00479-4_50626000.jpg
+4. Title: Blood of man who’s had 200 snake bites helps make a potent antivenom
+   URL: https://www.nature.com/articles/d41586-025-01325-3
+   Description: Treatment combines existing drug with antibodies from hyper-immune reptile collector, raising both h...
+   Authors: Katherine Bourzac
+   Date: 2025-05-02
+   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-01325-3/d41586-025-01325-3_50931088.jpg
 
-3. Title: Scientists use AI to design life-like enzymes from scratch
-   URL: https://www.nature.com/articles/d41586-025-00488-3
-   Description: Combined approach takes AI-engineered enzymes one step closer to practical applications....
-   Authors: Miryam Naddaf
-   Date: 2025-02-13
-   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-00488-3/d41586-025-00488-3_50636094.jpg
-
-4. Title: Royal Society will meet amid campaign to revoke Elon Musk’s fellowship
-   URL: https://www.nature.com/articles/d41586-025-00486-5
-   Description: More than 1,300 scientists have signed a letter calling on the world’s oldest science society to rea...
+5. Title: Star ecologist ‘blurred boundaries’ in lab — but colleagues criticize investigation
+   URL: https://www.nature.com/articles/d41586-025-01363-x
+   Description: A report into Thomas Crowther’s conduct at ETH Zurich finds that the professor breached some interna...
    Authors: Holly Else
-   Date: 2025-02-13
-   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-00486-5/d41586-025-00486-5_50635956.jpg
+   Date: 2025-05-02
+   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-01363-x/d41586-025-01363-x_50938120.jpg
 
-5. Title: Vaccine sceptic RFK Jr is now a powerful force in US science: what will he do?
-   URL: https://www.nature.com/articles/d41586-025-00439-y
-   Description: Kennedy has expressed support for some fields, but has also declared he’d like a ‘break’ in infectio...
-   Authors: Amanda Heidt, Heidi Ledford
-   Date: 2025-02-13
-   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-00439-y/d41586-025-00439-y_50621992.jpg
+6. Title: Trump proposes unprecedented budget cuts to US science
+   URL: https://www.nature.com/articles/d41586-025-01397-1
+   Description: Huge reductions, if enacted, could have ‘catastrophic’ effects on US competitiveness and the scienti...
+   Authors: Jeff Tollefson, Dan Garisto, Alexandra Witze
+   Date: 2025-05-02
+   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-01397-1/d41586-025-01397-1_50941252.jpg
 
-6. Title: Are PhDs losing their lustre? Why fewer students are enrolling in doctoral degrees
-   URL: https://www.nature.com/articles/d41586-025-00425-4
-   Description: High living costs paired with stagnant stipends are being blamed for a drop in PhD enrolments in sev...
-   Authors: Diana Kwon
-   Date: 2025-02-13
-   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-00425-4/d41586-025-00425-4_50621644.jpg
-
-7. Title: Quantum-computing technology that makes qubits from atoms wins mega investment
-   URL: https://www.nature.com/articles/d41586-025-00451-2
-   Description: Firms using ‘neutral atoms’ to create qubits are reentering the race to build useful quantum machine...
-   Authors: Elizabeth Gibney
-   Date: 2025-02-13
-   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-00451-2/d41586-025-00451-2_50636260.jpg
-
-8. Title: Cheap blood test detects pancreatic cancer before it spreads
-   URL: https://www.nature.com/articles/d41586-025-00438-z
-   Description: The deadly cancer is often not found until it has spread to other parts of the body....
-   Authors: Smriti Mallapaty
-   Date: 2025-02-12
-   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-00438-z/d41586-025-00438-z_50621748.jpg
-
-9. Title: How centuries of isolation shaped Greenlanders’ unique genetics
-   URL: https://www.nature.com/articles/d41586-025-00443-2
-   Description: Centuries of isolation have given Greenlanders a genetic profile that includes Arctic-specific varia...
-   Authors: Freda Kreier
-   Date: 2025-02-12
-   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-00443-2/d41586-025-00443-2_50625480.jpg
-
-10. Title: Record-breaking neutrino is most energetic ever detected
-   URL: https://www.nature.com/articles/d41586-025-00444-1
-   Description: Although still under construction, the sea-floor KM3NeT detector spotted a neutrino 20 times more po...
+7. Title: Revealed: the unusual mathematics that gives rose petals their shape
+   URL: https://www.nature.com/articles/d41586-025-01394-4
+   Description: The pointy edges of petals rely on a type of geometric feedback never before seen in nature....
    Authors: Davide Castelvecchi
-   Date: 2025-02-12
-   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-00444-1/d41586-025-00444-1_50625568.jpg
+   Date: 2025-05-01
+   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-01394-4/d41586-025-01394-4_50937968.jpg
+
+8. Title: Powerful protein editors offer new ways of probing living cells
+   URL: https://www.nature.com/articles/d41586-025-01358-8
+   Description: Scientists deploy self-splicing protein subunits to insert strange new additions into target protein...
+   Authors: Asher Mullard
+   Date: 2025-05-01
+   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-01358-8/d41586-025-01358-8_50931568.jpg
+
+9. Title: Exclusive: NSF stops awarding new grants and funding existing ones
+   URL: https://www.nature.com/articles/d41586-025-01396-2
+   Description: US science funder also plans to screen grant applications for compliance with ‘agency priorities’....
+   Authors: Dan Garisto
+   Date: 2025-05-01
+   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-01396-2/d41586-025-01396-2_50938180.jpg
+
+10. Title: Nickel production is notoriously dirty — here’s how to make it greener
+   URL: https://www.nature.com/articles/d41586-025-01356-w
+   Description: If scaled up, a method for extracting nickel without using carbon-rich coke could reduce emissions c...
+   Authors: Davide Castelvecchi
+   Date: 2025-04-30
+   Image URL: https://media.springernature.com/w290h158/magazine-assets/d41586-025-01356-w/d41586-025-01356-w_50931426.jpg
 Done!

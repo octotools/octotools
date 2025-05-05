@@ -1,7 +1,79 @@
-
 Initializing Image Captioner Tool with model: gpt-4o
-!! Cache enabled for model: gpt-4o
 {'tool_name': 'Image_Captioner_Tool', 'tool_description': "A tool that generates captions for images using OpenAI's multimodal model.", 'tool_version': '1.0.0', 'input_types': {'image': 'str - The path to the image file.', 'prompt': "str - The prompt to guide the image captioning (default: 'Describe this image in detail.')."}, 'output_type': 'str - The generated caption for the image.', 'demo_commands': [{'command': 'execution = tool.execute(image="path/to/image.png")', 'description': 'Generate a caption for an image using the default prompt and model.'}, {'command': 'execution = tool.execute(image="path/to/image.png", prompt="Explain the mood of this scene.")', 'description': 'Generate a caption focusing on the mood using a specific prompt and model.'}], 'require_llm_engine': True, 'user_metadata': {'limitation': 'The Image_Captioner_Tool provides general image descriptions but has limitations: 1) May make mistakes in complex scenes, counting, attribute detection, and understanding object relationships. 2) Might not generate comprehensive captions, especially for images with multiple objects or abstract concepts. 3) Performance varies with image complexity. 4) Struggles with culturally specific or domain-specific content. 5) May overlook details or misinterpret object relationships. For precise descriptions, consider: using it with other tools for context/verification, as an initial step before refinement, or in multi-step processes for ambiguity resolution. Verify critical information with specialized tools or human expertise when necessary.'}}
-Generated Caption:
-"The image shows four blue buckets, each containing five baseballs. The buckets are arranged in a grid pattern with three on the top row and one on the bottom left. Each bucket has a handle on the side, and the baseballs inside are white with red stitching, typical of standard baseballs. The background is plain white, emphasizing the buckets and their contents."
-Done!
+Error in sys.excepthook:
+Traceback (most recent call last):
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/linecache.py", line 46, in getlines
+    return updatecache(filename, module_globals)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/linecache.py", line 136, in updatecache
+    with tokenize.open(fullname) as fp:
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/tokenize.py", line 396, in open
+    encoding, lines = detect_encoding(buffer.readline)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/tokenize.py", line 365, in detect_encoding
+    first = read_or_stop()
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/tokenize.py", line 323, in read_or_stop
+    return readline()
+KeyboardInterrupt
+
+Original exception was:
+Traceback (most recent call last):
+  File "/Users/shivakrishna/Projects/octotools/octotools/tools/image_captioner/tool.py", line 90, in <module>
+    execution = tool.execute(image=image_path)
+  File "/Users/shivakrishna/Projects/octotools/octotools/tools/image_captioner/tool.py", line 52, in execute
+    caption = self.llm_engine(input_data)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/octotools/engine/openai.py", line 219, in __call__
+    return self.generate(prompt, **kwargs)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/tenacity/__init__.py", line 336, in wrapped_f
+    return copy(f, *args, **kw)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/tenacity/__init__.py", line 475, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/tenacity/__init__.py", line 376, in iter
+    result = action(retry_state)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/tenacity/__init__.py", line 398, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+    return self.__get_result()
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/tenacity/__init__.py", line 478, in __call__
+    result = fn(*args, **kwargs)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/octotools/engine/openai.py", line 108, in generate
+    return self._generate_multimodal(content, system_prompt=system_prompt, **kwargs)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/octotools/engine/openai.py", line 270, in _generate_multimodal
+    response = self.client.chat.completions.create(
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/openai/_utils/_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/openai/resources/chat/completions/completions.py", line 929, in create
+    return self._post(
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/openai/_base_client.py", line 1276, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/openai/_base_client.py", line 949, in request
+    return self._request(
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/openai/_base_client.py", line 989, in _request
+    response = self._client.send(
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/site-packages/httpcore/_backends/sync.py", line 208, in connect_tcp
+    sock = socket.create_connection(
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/socket.py", line 836, in create_connection
+    for res in getaddrinfo(host, port, 0, SOCK_STREAM):
+  File "/opt/homebrew/anaconda3/envs/octotools_exp/lib/python3.10/socket.py", line 967, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+KeyboardInterrupt
