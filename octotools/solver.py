@@ -299,7 +299,7 @@ def parse_arguments():
         help="Maximum tokens for LLM generation.",
     )
     parser.add_argument(
-        "--max_steps", type=int, default=10, help="Maximum number of steps to execute."
+        "--max_steps", type=int, default=3, help="Maximum number of steps to execute."
     )
     parser.add_argument(
         "--max_time", type=int, default=300, help="Maximum time allowed in seconds."

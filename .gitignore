@@ -173,8 +173,6 @@ logs/
 
 # [Octotools] ingore all cache directories
 cache/
-tool_cache/
-solver_cache/
 local_model/
 
 # [Octotools] ignore all files in examples/notebooks/local_model/
