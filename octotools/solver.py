@@ -284,7 +284,8 @@ def parse_arguments():
     parser.add_argument(
         "--enabled_tools",
         default="Generalist_Solution_Generator_Tool,Robo_Action_Tool",
-        help="List of enabled tools.",
+        type=lambda s: s.split(","),
+        help="Comma-separated list of enabled tools.",
     )
     parser.add_argument(
         "--root_cache_dir",
@@ -313,9 +314,11 @@ def main(args):
 
     with open("context.txt", "r") as cf:
         context = cf.read().strip()
-
-    base_question = context.split("\n")[0]
-    full_question = f"{context}\n\n{base_question}"
+    full_question = (
+        context
+        + "\n"
+        + "complete the user requested task with the actions that you are able to do."
+    )
     solver = construct_solver(
         llm_engine_name=args.llm_engine_name,
         enabled_tools=args.enabled_tools,

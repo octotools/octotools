@@ -1,1 +1,34 @@
-booo
+USER_REQUEST:
+hey xbot, i’m going to take a twenty-minute nap—can you help me fill my cup before that?
+
+ENVIRONMENT:
+Timestamp 1 s:
+  • Mug: white ceramic “Berkeley CS” mug, at (x≈30 cm forward, y≈+10 cm right), handle at 2 o’clock.
+  • Table: wood top, height ~75 cm, uncluttered, clear workspace.
+  • Background: white wall 1 m behind; closed door on right, handle at ~1.1 m.
+  • Lighting: diffuse daylight from left.
+
+Timestamp 2 s:
+  • Right hand lifts mug; handle swings to 12 o’clock; user leans forward.
+  • Body posture: seated, head down, eyes on mug.
+
+Timestamp 3 s:
+  • Mug placed back; handle now at 10 o’clock; liquid level ~50–70%.
+  • Hands out of view, table fully clear; user straightens and looks forward.
+
+Timestamp 4 s:
+  • User leans ~10 cm forward, direct gaze at camera (issuing command).
+  • Mug stationary, same coordinates; workspace remains empty.
+
+Timestamp 11 s:
+  • User has exited frame; mug alone at same spot.
+  • Scene static: table clear, door closed, consistent lighting.
+
+ROBOT-USEFUL NOTES:
+  – Table coordinates define the robot’s workspace: front edge at x=0, mug at (30 cm, +10 cm).
+  – Handle orientation changes: initial 2 o’clock → 12 o’clock → 10 o’clock.
+  – No obstacles within 20 cm radius of mug; safe approach path.
+  – Lighting uniform; no glare expected.
+  – On the right hand side 20 cm from the mug in the position of 4 o'clock, there is a small faucet that you can lift the tap to get water. 
+  - The faucet is 10 cm high and the tap is 5 cm high.
+  – The mug is 10 cm high and the table is 75 cm high.
