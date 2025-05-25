@@ -1,4 +1,5 @@
 import argparse
+import os
 import time
 import json
 from typing import Optional
@@ -88,7 +89,7 @@ class Solver:
                 step_count < self.max_steps
                 and (time.time() - query_start_time) < self.max_time
             ):
-                step_count += 1
+                step_count = 1
                 step_start_time = time.time()
 
                 # [2] Generate next step
@@ -216,7 +217,7 @@ class Solver:
 
 
 def construct_solver(
-    llm_engine_name: str = "gpt-4o",
+    llm_engine_name: str = "gpt-41-mini",
     enabled_tools: list[str] = ["all"],
     output_types: str = "final,direct",
     max_steps: int = 10,
@@ -282,7 +283,7 @@ def parse_arguments():
     )
     parser.add_argument(
         "--enabled_tools",
-        default="Generalist_Solution_Generator_Tool",
+        default="Generalist_Solution_Generator_Tool,Robo_Action_Tool",
         help="List of enabled tools.",
     )
     parser.add_argument(
@@ -309,6 +310,12 @@ def parse_arguments():
 
 
 def main(args):
+
+    with open("context.txt", "r") as cf:
+        context = cf.read().strip()
+
+    base_question = context.split("\n")[0]
+    full_question = f"{context}\n\n{base_question}"
     solver = construct_solver(
         llm_engine_name=args.llm_engine_name,
         enabled_tools=args.enabled_tools,
@@ -321,7 +328,20 @@ def main(args):
     )
 
     # Solve the task or problem
-    solver.solve("What is the capital of France?")
+    out = solver.solve(full_question)
+    os.makedirs(args.root_cache_dir, exist_ok=True)
+    json_path = os.path.join(args.root_cache_dir, "output.json")
+    txt_path = os.path.join(args.root_cache_dir, "output.txt")
+    with open(json_path, "w") as jf:
+        json.dump(out, jf, indent=2)
+    with open(txt_path, "w") as tf:
+        # you can customize formatting however you like:
+        tf.write("=== FULL QUESTION ===\n")
+        tf.write(full_question + "\n\n")
+        tf.write("=== JSON DATA ===\n")
+        tf.write(json.dumps(out, indent=2))
+
+    print(f"\n✅ Outputs written to:\n  • {json_path}\n  • {txt_path}")
 
 
 if __name__ == "__main__":
