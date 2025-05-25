@@ -32,3 +32,4 @@ ROBOT-USEFUL NOTES:
   – On the right hand side 20 cm from the mug in the position of 4 o'clock, there is a small faucet that you can lift the tap to get water. 
   - The faucet is 10 cm high and the tap is 5 cm high.
   – The mug is 10 cm high and the table is 75 cm high.
+  - The faucet will automatically turn off after you lift the tap when the filling is done. You can move away after lifting the tap and assume the water will fill the mug.
