@@ -241,12 +241,12 @@ class Solver:
                     query_analysis, 
                     self.memory
                 )
-                conclusion = self.planner.extract_conclusion(stop_verification)
+                context_verification, conclusion = self.planner.extract_conclusion(stop_verification)
                 
                 if self.verbose:
                     print(f"\n## [{step_count}] Stopping Verification:")
                     print("#"*50)
-                    print(f"{stop_verification}")
+                    print(f"{context_verification}")
                     print("#"*50)
                     print(f"\n==>Extracted Conclusion:\n{conclusion}")
 
