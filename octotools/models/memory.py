@@ -10,8 +10,6 @@ class Memory:
         self._init_file_types()
 
     def set_query(self, query: str) -> None:
-        if not isinstance(query, str):
-            raise TypeError("Query must be a string")
         self.query = query
 
     def _init_file_types(self):

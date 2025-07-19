@@ -1,7 +1,7 @@
 # octotools/tools/base.py
-
-from octotools.engine.openai import ChatOpenAI
-
+from pydantic import BaseModel
+from verl.tools.schemas import OpenAIFunctionToolSchema,OpenAIFunctionSchema,OpenAIFunctionParametersSchema,OpenAIFunctionPropertySchema # type: ignore
+import json
 class BaseTool:
     """
     A base class for building tool classes that perform specific tasks, such as image processing or text detection.
@@ -101,3 +101,64 @@ class BaseTool:
             NotImplementedError: If the subclass does not implement this method.
         """
         raise NotImplementedError("Subclasses must implement the execute method.")
+    
+    
+    def convert_schema(self) -> OpenAIFunctionToolSchema:
+        '''
+        Converts self.input_types into OpenAIFunctionToolSchema
+        '''
+        
+        def parse_type_and_description(value: str):
+            """Parses self.input_types's values into ('type', 'description')"""
+            # some used shorten text, so we need to resolve this.
+            type_convert = { 
+                "str": "string",
+                "int": "integer",
+                "float": "number",
+                "bool": "boolean",
+                "list": "array",
+                "dict": "object"
+            }
+            type_part, desc_part = value.split(" - ", 1)
+            return type_convert.get(type_part.strip(),type_part.strip()), desc_part.strip()
+
+        description = self.tool_description
+        
+        # Note that OpenAI schema doesn't support output_type or demo_commands. So we merge with self.description.
+        if self.demo_commands: # type: list[dict]
+            description += "demo command(s) is: " + json.dumps(self.demo_commands, indent=2) + "."
+        if self.output_type: # type: str
+            param_type, param_description = parse_type_and_description(self.output_type)
+            description += "output type is: " + param_type + "and it is " + param_description + "."
+        
+        properties = {}
+        for param_name, value in self.input_types.items():
+            # i.g. value = "str - this is the input param for url." 
+            #       -> param_type = "string", param_description = "this is the input param for url."
+            param_type, param_description = parse_type_and_description(value)
+            
+            properties[param_name] = OpenAIFunctionPropertySchema(
+                type=param_type,
+                description=param_description
+            )
+
+        required_fields = list(self.input_types.keys())
+
+        # Check https://github.com/volcengine/verl/blob/main/verl/tools/schemas.py
+        return OpenAIFunctionToolSchema(
+            type="function",
+            function=OpenAIFunctionSchema(
+                name=self.tool_name,
+                description=self.tool_description,
+                parameters=OpenAIFunctionParametersSchema(
+                    type="object", # type: str
+                    properties=properties, # type: dict[str, OpenAIFunctionPropertySchema]
+                    required=required_fields # type: list[str]
+                )
+            )
+        )
+        
+class MCPTool(BaseTool):
+    ...    
+        
+        
