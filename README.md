@@ -108,10 +108,11 @@ We support a broad range of LLM engines, including GPT-4o, Claude 3.5 Sonnet, Ge
 | vLLM | Various vLLM-supported models, for example, `Qwen2.5-VL-3B-Instruct` and `Qwen2.5-VL-72B-Instruct`. You can also use local checkpoint models for customization and local inference. ([Example-1](https://github.com/octotools/octotools/blob/main/examples/notebooks/baseball_query_local_model_qwen.ipynb), [Example-2](https://github.com/octotools/octotools/blob/main/examples/notebooks/baseball_query_parallel_inference.ipynb))| Various vLLM-supported models, for example, `Qwen2.5-1.5B-Instruct`. You can also use local checkpoint models for customization and local inference. | [vLLM Models](https://docs.vllm.ai/en/latest/models/supported_models.html) |
 | LiteLLM | Any model supported by LiteLLM, including models from OpenAI, Anthropic, Google, Mistral, Cohere, and more. | Any model supported by LiteLLM, including models from OpenAI, Anthropic, Gemini, Mistral, Cohere, and more. | [LiteLLM Models](https://docs.litellm.ai/docs/providers) |
 | Forge | Any Forge-supported models via `forge/Provider/model-name` (e.g., `forge/OpenAI/gpt-4o-mini`). | Same as multi-modal column. | [Forge Models](https://forge.tensorblock.co) |
+| Atlas Cloud | Any Atlas Cloud LLM via `atlascloud/provider/model-name` (e.g., `atlascloud/google/gemini-3.5-flash`). | Same as multi-modal column. | [Atlas Cloud Models](https://api.atlascloud.ai/api/v1/models) |
 | Ollama | Any model supported by Ollama, such as `DeepSeek-R1`, `Qwen 3`, `Llama 3.3`, `Gemma 3`, and other models. | Any model supported by Ollama, such as `Qwen 2.5‑VL`. | [Ollama Models](https://ollama.ai/library) |
 
 
-> Note: If you are using TogetherAI models, please ensure have the prefix 'together-' in the model string, for example, `together-meta-llama/Llama-4-Scout-17B-16E-Instruct`. For VLLM models, use the prefix 'vllm-', for example, `vllm-meta-llama/Llama-4-Scout-17B-16E-Instruct`. For LiteLLM, use the prefix 'litellm-', for example, `litellm-gpt-4o` or `litellm-claude-3-sonnet-20240229`. For Ollama, use the prefix 'ollama-', for example, `ollama-qwen3:latest`. For Forge, use the prefix 'forge/', for example, `forge/OpenAI/gpt-4o-mini`, and set `FORGE_API_KEY` (optional `FORGE_API_BASE`). For other custom engines, you can edit the [factory.py](https://github.com/OctoTools/OctoTools/blob/main/octotools/engine/factory.py) file and add its interface file to add support for your engine. Your pull request will be warmly welcomed!
+> Note: If you are using TogetherAI models, please ensure have the prefix 'together-' in the model string, for example, `together-meta-llama/Llama-4-Scout-17B-16E-Instruct`. For VLLM models, use the prefix 'vllm-', for example, `vllm-meta-llama/Llama-4-Scout-17B-16E-Instruct`. For LiteLLM, use the prefix 'litellm-', for example, `litellm-gpt-4o` or `litellm-claude-3-sonnet-20240229`. For Ollama, use the prefix 'ollama-', for example, `ollama-qwen3:latest`. For Forge, use the prefix 'forge/', for example, `forge/OpenAI/gpt-4o-mini`, and set `FORGE_API_KEY` (optional `FORGE_API_BASE`). For Atlas Cloud, use the prefix `atlascloud/`, for example, `atlascloud/google/gemini-3.5-flash`, and set `ATLASCLOUD_API_KEY` (optional `ATLASCLOUD_API_BASE`). For other custom engines, you can edit the [factory.py](https://github.com/OctoTools/OctoTools/blob/main/octotools/engine/factory.py) file and add its interface file to add support for your engine. Your pull request will be warmly welcomed!
 
 ## Installation
 
@@ -137,6 +138,8 @@ Make `.env` file, and set `OPENAI_API_KEY`, `GOOGLE_API_KEY`, `GOOGLE_CX`, etc. 
 OPENAI_API_KEY=<your-api-key-here> # If you want to use OpenAI LLM
 FORGE_API_KEY=<your-api-key-here> # If you want to use Forge LLM (OpenAI-compatible)
 FORGE_API_BASE=https://api.forge.tensorblock.co/v1 # Optional custom Forge base URL
+ATLASCLOUD_API_KEY=<your-api-key-here> # If you want to use Atlas Cloud LLMs
+ATLASCLOUD_API_BASE=https://api.atlascloud.ai/v1 # Optional custom Atlas Cloud base URL
 ANTHROPIC_API_KEY=<your-api-key-here> # If you want to use Anthropic LLM
 TOGETHER_API_KEY=<your-api-key-here> # If you want to use TogetherAI LLM
 DEEPSEEK_API_KEY=<your-api-key-here> # If you want to use DeepSeek LLM
