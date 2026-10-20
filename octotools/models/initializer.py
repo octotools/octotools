@@ -65,6 +65,9 @@ class Initializer:
                     module = importlib.import_module(import_path)
                     for name, obj in inspect.getmembers(module):
                         if inspect.isclass(obj) and name.endswith('Tool') and name != 'BaseTool':
+                            # Tools with load_with_all = False load only when named in enabled_tools
+                            if self.load_all and not getattr(obj, 'load_with_all', True):
+                                continue
                             print(f"Found tool class: {name}")
                             # Store the directory mapping for later use in run_demo_commands
                             directory_name = os.path.basename(root)
