@@ -1,5 +1,6 @@
 # octotools/tools/python_code_generator/tool.py
 
+import ast
 import os
 import re
 import sys
@@ -142,7 +143,7 @@ class Python_Code_Generator_Tool(BaseTool):
 
     def execute_code_snippet(self, code):
         """
-        Executes the given Python code snippet.
+        Executes the given Python code snippet in a restricted environment.
 
         Parameters:
             code (str): The Python code snippet to be executed.
@@ -150,44 +151,62 @@ class Python_Code_Generator_Tool(BaseTool):
         Returns:
             dict: A dictionary containing the printed output and local variables.
         """
-        # Check for dangerous functions and remove them
-        dangerous_functions = ['exit', 'quit', 'sys.exit']
-        for func in dangerous_functions:
-            if func in code:
-                print(f"Warning: Removing unsafe '{func}' call from code")
-                # Use regex to remove function calls with any arguments
-                code = re.sub(rf'{func}\s*\([^)]*\)', 'break', code)
-
         try:
             execution_code = self.preprocess_code(code)
+        except Exception as e:
+            return {"error": str(e)}
 
-            # Execute with 10-second timeout
+        # Enforce declared security invariants via AST analysis:
+        # 1. Prohibit import statements (ast.Import, ast.ImportFrom)
+        # 2. Prohibit access to private/dunder attributes
+        # 3. Prohibit restricted functions/identifiers
+        try:
+            parsed_ast = ast.parse(execution_code)
+            restricted_names = {
+                "exit", "quit", "sys", "os", "subprocess", "eval", "exec",
+                "open", "compile", "__import__", "breakpoint", "input"
+            }
+            for node in ast.walk(parsed_ast):
+                if isinstance(node, (ast.Import, ast.ImportFrom)):
+                    return {"error": "SecurityError: 'import' statements are prohibited in code snippet."}
+                if isinstance(node, ast.Attribute) and node.attr.startswith("__"):
+                    return {"error": f"SecurityError: Access to private attribute '{node.attr}' is prohibited."}
+                if isinstance(node, ast.Name) and node.id in restricted_names:
+                    return {"error": f"SecurityError: Access to '{node.id}' is prohibited."}
+        except SyntaxError as e:
+            return {"error": f"SyntaxError: {e}"}
+
+        # Safe built-in functions allowlist for basic math / data manipulation
+        safe_builtins = {
+            "abs": abs, "all": all, "any": any, "bin": bin, "bool": bool,
+            "dict": dict, "divmod": divmod, "enumerate": enumerate,
+            "filter": filter, "float": float, "hex": hex, "int": int,
+            "isinstance": isinstance, "issubclass": issubclass, "iter": iter,
+            "len": len, "list": list, "map": map, "max": max, "min": min,
+            "next": next, "oct": oct, "ord": ord, "pow": pow, "print": print,
+            "range": range, "reversed": reversed, "round": round, "set": set,
+            "sorted": sorted, "str": str, "sum": sum, "tuple": tuple, "zip": zip,
+            "True": True, "False": False, "None": None
+        }
+        safe_globals = {"__builtins__": safe_builtins}
+        local_vars = {}
+
+        try:
+            # Execute with 10-second timeout and capture output
             with timeout(10):
-                try:
-                    exec(execution_code)
-                except TimeoutException:
-                    print("Error: Code execution exceeded 60 seconds timeout")
-                    return {"error": "Execution timed out after 60 seconds"}
-                except Exception as e:
-                    print(f"Error executing code: {e}")
-                    return {"error": str(e)}
-                
-            # Capture the output and local variables
-            local_vars = {}
-            with self.capture_output() as output:
-                exec(execution_code, {}, local_vars)
+                with self.capture_output() as output:
+                    exec(execution_code, safe_globals, local_vars)
+            
             printed_output = output.getvalue().strip()
 
-            # Filter out built-in variables and modules
-            """
-            only the variables used in the code are returned, 
-            excluding built-in variables (which start with '__') and imported modules.
-            """
-            used_vars = {k: v for k, v in local_vars.items() 
-                         if not k.startswith('__') and not isinstance(v, type(sys))}
+            # Filter out built-in variables and internal attributes
+            used_vars = {k: v for k, v in local_vars.items() if not k.startswith('__')}
             
             return {"printed_output": printed_output, "variables": used_vars}
-        
+
+        except TimeoutException:
+            print("Error: Code execution exceeded timeout")
+            return {"error": "Execution timed out after 10 seconds"}
         except Exception as e:
             print(f"Error executing code: {e}")
             return {"error": str(e)}
