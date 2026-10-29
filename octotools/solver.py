@@ -216,6 +216,7 @@ def construct_solver(llm_engine_name : str = "gpt-4o",
         llm_engine_name=llm_engine_name,
         root_cache_dir=root_cache_dir,
         verbose=verbose,
+        available_tools=initializer.available_tools,
     )
 
     # Instantiate Solver

@@ -1,9 +1,9 @@
 # octotools/tools/python_code_generator/tool.py
 
-import ast
 import os
 import re
 import sys
+import warnings
 from io import StringIO
 import contextlib
 
@@ -56,11 +56,12 @@ def timeout(seconds):
 
 class Python_Code_Generator_Tool(BaseTool):
     require_llm_engine = True
+    load_with_all = False
 
     def __init__(self, model_string="gpt-4o-mini"):
         super().__init__(
             tool_name="Python_Code_Generator_Tool",
-            tool_description="A tool that generates and executes simple Python code snippets for basic arithmetical calculations and math-related problems. The generated code runs in a highly restricted environment with only basic mathematical operations available.",
+            tool_description="A tool that generates and executes Python code for arithmetic and math-related problems. Code runs in the host process without security isolation. Enable this tool explicitly only in an environment whose permissions and isolation you manage.",
             tool_version="1.0.0",
             input_types={
                 "query": "str - A clear, specific description of the arithmetic calculation or math problem to be solved, including any necessary numerical inputs."},
@@ -81,15 +82,10 @@ class Python_Code_Generator_Tool(BaseTool):
             ],
             user_metadata = {
                 "limitations": [
-                    "Restricted to basic Python arithmetic operations and built-in mathematical functions.",
-                    "Cannot use any external libraries or modules, including those in the Python standard library.",
-                    "Limited to simple mathematical calculations and problems.",
-                    "Cannot perform any string processing, data structure manipulation, or complex algorithms.",
-                    "No access to any system resources, file operations, or network requests.",
-                    "Cannot use 'import' statements.",
-                    "All calculations must be self-contained within a single function or script.",
-                    "Input must be provided directly in the query string.",
-                    "Output is limited to numerical results or simple lists/tuples of numbers."
+                    "Not included when enabled_tools is ['all']; select this tool by name to enable it.",
+                    "Generated code is not sandboxed and can import modules, access files and networks, and use the host process's permissions.",
+                    "Users must provide their own isolation and restrict access to sensitive data and credentials.",
+                    "The 10-second timeout uses POSIX signals on the main thread; the Windows timer does not reliably interrupt running code."
                 ],
                 "best_practices": [
                     "Provide clear and specific queries that describe the desired mathematical calculation.",
@@ -143,7 +139,7 @@ class Python_Code_Generator_Tool(BaseTool):
 
     def execute_code_snippet(self, code):
         """
-        Executes the given Python code snippet in a restricted environment.
+        Executes the given Python code snippet without security isolation.
 
         Parameters:
             code (str): The Python code snippet to be executed.
@@ -151,61 +147,39 @@ class Python_Code_Generator_Tool(BaseTool):
         Returns:
             dict: A dictionary containing the printed output and local variables.
         """
+        warnings.warn(
+            "Python_Code_Generator_Tool executes generated code without a sandbox, "
+            "using the host process's permissions. Provide your own isolation.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
+        # Filtering process-exit calls is not a security boundary.
+        dangerous_functions = ['exit', 'quit', 'sys.exit']
+        for func in dangerous_functions:
+            if func in code:
+                print(f"Warning: Removing unsafe '{func}' call from code")
+                # Use regex to remove function calls with any arguments
+                code = re.sub(rf'{func}\s*\([^)]*\)', 'break', code)
+
         try:
             execution_code = self.preprocess_code(code)
-        except Exception as e:
-            return {"error": str(e)}
-
-        # Enforce declared security invariants via AST analysis:
-        # 1. Prohibit import statements (ast.Import, ast.ImportFrom)
-        # 2. Prohibit access to private/dunder attributes
-        # 3. Prohibit restricted functions/identifiers
-        try:
-            parsed_ast = ast.parse(execution_code)
-            restricted_names = {
-                "exit", "quit", "sys", "os", "subprocess", "eval", "exec",
-                "open", "compile", "__import__", "breakpoint", "input"
-            }
-            for node in ast.walk(parsed_ast):
-                if isinstance(node, (ast.Import, ast.ImportFrom)):
-                    return {"error": "SecurityError: 'import' statements are prohibited in code snippet."}
-                if isinstance(node, ast.Attribute) and node.attr.startswith("__"):
-                    return {"error": f"SecurityError: Access to private attribute '{node.attr}' is prohibited."}
-                if isinstance(node, ast.Name) and node.id in restricted_names:
-                    return {"error": f"SecurityError: Access to '{node.id}' is prohibited."}
-        except SyntaxError as e:
-            return {"error": f"SyntaxError: {e}"}
-
-        # Safe built-in functions allowlist for basic math / data manipulation
-        safe_builtins = {
-            "abs": abs, "all": all, "any": any, "bin": bin, "bool": bool,
-            "dict": dict, "divmod": divmod, "enumerate": enumerate,
-            "filter": filter, "float": float, "hex": hex, "int": int,
-            "isinstance": isinstance, "issubclass": issubclass, "iter": iter,
-            "len": len, "list": list, "map": map, "max": max, "min": min,
-            "next": next, "oct": oct, "ord": ord, "pow": pow, "print": print,
-            "range": range, "reversed": reversed, "round": round, "set": set,
-            "sorted": sorted, "str": str, "sum": sum, "tuple": tuple, "zip": zip,
-            "True": True, "False": False, "None": None
-        }
-        safe_globals = {"__builtins__": safe_builtins}
-        local_vars = {}
-
-        try:
-            # Execute with 10-second timeout and capture output
-            with timeout(10):
-                with self.capture_output() as output:
-                    exec(execution_code, safe_globals, local_vars)
-            
+            local_vars = {}
+            with timeout(10), self.capture_output() as output:
+                exec(execution_code, local_vars)
             printed_output = output.getvalue().strip()
 
-            # Filter out built-in variables and internal attributes
-            used_vars = {k: v for k, v in local_vars.items() if not k.startswith('__')}
+            # Filter out built-in variables and modules
+            """
+            only the variables used in the code are returned, 
+            excluding built-in variables (which start with '__') and imported modules.
+            """
+            used_vars = {k: v for k, v in local_vars.items() 
+                         if not k.startswith('__') and not isinstance(v, type(sys))}
             
             return {"printed_output": printed_output, "variables": used_vars}
 
         except TimeoutException:
-            print("Error: Code execution exceeded timeout")
+            print("Error: Code execution exceeded 10 seconds timeout")
             return {"error": "Execution timed out after 10 seconds"}
         except Exception as e:
             print(f"Error executing code: {e}")
