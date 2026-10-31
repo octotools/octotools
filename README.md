@@ -179,6 +179,42 @@ sudo apt-get update
 sudo apt-get install parallel
 ```
 
+### Optional vLLM server
+
+vLLM is not installed with OctoTools. To use a local vLLM model, run the server in a separate environment on the same machine. vLLM 0.32.0 requires Python 3.11 through 3.14 and newer OpenAI and Pillow packages than OctoTools currently pins. Follow the [vLLM installation guide](https://docs.vllm.ai/en/latest/getting_started/installation/) for your hardware.
+
+In a separate terminal, create the server environment and start a model:
+
+```sh
+python3.11 -m venv .venv-vllm
+source .venv-vllm/bin/activate
+python -m pip install "vllm==0.32.0"
+vllm serve Qwen/Qwen2.5-VL-3B-Instruct --host 127.0.0.1 --port 8888
+```
+
+Wait for the server to finish starting. In your OctoTools environment (or notebook kernel), connect without launching another server:
+
+```python
+from octotools.solver import construct_solver
+
+solver = construct_solver(
+    llm_engine_name="vllm-Qwen/Qwen2.5-VL-3B-Instruct",
+    start_vllm_server=False,
+)
+```
+
+The client uses `http://localhost:8888/v1`. The model name after `vllm-` must match the server's model identifier. For a local checkpoint, use `--served-model-name` to give it a stable name and use that same name in `llm_engine_name`.
+
+Both `python -m octotools.solver` and `python tasks/solve.py` accept `--no-start-vllm-server`. For example:
+
+```sh
+python -m octotools.solver --llm_engine_name vllm-Qwen/Qwen2.5-VL-3B-Instruct --no-start-vllm-server
+```
+
+`start_vllm_server=True` remains the default for existing environments that can launch vLLM themselves. `vllm_config_path` only applies to that automatic startup. With an independently started server, pass the configuration to `vllm serve --config ...` instead.
+
+Removing the default dependency does not uninstall or update an existing vLLM server. Existing users should migrate to a separate server running vLLM 0.32.0 or a later version containing the fix for [GHSA-h3rc-j82p-2c3h](https://github.com/vllm-project/vllm/security/advisories/GHSA-h3rc-j82p-2c3h).
+
 ## Quick Start
 
 In a brand new folder, paste the following code to set the API keys:

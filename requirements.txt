@@ -15,6 +15,5 @@ sympy==1.13.1
 tenacity==9.0.0
 wikipedia==1.4.0
 exa-py>=2.0.0
-vllm==0.8.5
 # litellm==2.1.1
 # ollama==0.5.1

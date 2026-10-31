@@ -190,7 +190,8 @@ def construct_solver(llm_engine_name : str = "gpt-4o",
                      max_tokens : int = 4000,
                      root_cache_dir : str = "solver_cache",
                      verbose : bool = True,
-                     vllm_config_path : str = None):
+                     vllm_config_path : str = None,
+                     start_vllm_server : bool = True):
     
     # Instantiate Initializer
     initializer = Initializer(
@@ -198,6 +199,7 @@ def construct_solver(llm_engine_name : str = "gpt-4o",
         model_string=llm_engine_name,
         verbose=verbose,
         vllm_config_path=vllm_config_path,
+        start_vllm_server=start_vllm_server,
     )
 
     # Instantiate Planner
@@ -235,6 +237,8 @@ def construct_solver(llm_engine_name : str = "gpt-4o",
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Run the octotools demo with specified parameters.")
     parser.add_argument("--llm_engine_name", default="gpt-4o", help="LLM engine name.")
+    parser.add_argument("--no-start-vllm-server", dest="start_vllm_server", action="store_false", default=True,
+                        help="Use an already running vLLM server at localhost:8888.")
     parser.add_argument(
         "--output_types",
         default="base,final,direct",
@@ -256,7 +260,8 @@ def main(args):
                               max_time=args.max_time, 
                               max_tokens=args.max_tokens, 
                               root_cache_dir=args.root_cache_dir,
-                              verbose=args.verbose)
+                              verbose=args.verbose,
+                              start_vllm_server=args.start_vllm_server)
 
     # Solve the task or problem
     solver.solve("What is the capital of France?")

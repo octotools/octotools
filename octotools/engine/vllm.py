@@ -1,11 +1,6 @@
 # Reference: https://github.com/zou-group/textgrad/blob/main/textgrad/engine/openai.py
 
 try:
-    import vllm
-except ImportError:
-    raise ImportError("If you'd like to use VLLM models, please install the vllm package by running `pip install vllm`.")
-
-try:
     from openai import OpenAI
 except ImportError:
     raise ImportError("If you'd like to use VLLM models, please install the openai package by running `pip install openai`.")

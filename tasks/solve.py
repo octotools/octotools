@@ -312,6 +312,8 @@ class Solver:
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Run the octotools demo with specified parameters.")
     parser.add_argument("--llm_engine_name", default="gpt-4o", help="LLM engine name.")
+    parser.add_argument("--no-start-vllm-server", dest="start_vllm_server", action="store_false", default=True,
+                        help="Use an already running vLLM server at localhost:8888.")
     parser.add_argument("--max_tokens", type=int, default=4000, help="Maximum tokens for LLM generation.")
     parser.add_argument("--run_baseline_only", type=bool, default=False, help="Run only the baseline (no toolbox).")
     parser.add_argument("--task", default="minitoolbench", help="Task to run.")
@@ -339,7 +341,8 @@ def main(args):
     # Instantiate Initializer
     initializer = Initializer(
         enabled_tools=enabled_tools,
-        model_string=args.llm_engine_name
+        model_string=args.llm_engine_name,
+        start_vllm_server=args.start_vllm_server,
     )
 
     # Instantiate Planner
