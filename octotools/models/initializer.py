@@ -6,7 +6,7 @@ import traceback
 from typing import Dict, Any, List, Tuple
 import time
 class Initializer:
-    def __init__(self, enabled_tools: List[str] = [], model_string: str = None, verbose: bool = False, vllm_config_path: str = None):
+    def __init__(self, enabled_tools: List[str] = [], model_string: str = None, verbose: bool = False, vllm_config_path: str = None, start_vllm_server: bool = True):
         self.toolbox_metadata = {}
         self.available_tools = []
         self.enabled_tools = enabled_tools
@@ -22,7 +22,7 @@ class Initializer:
         self._set_up_tools()
 
         # if vllm, set up the vllm server
-        if model_string.startswith("vllm-"):
+        if model_string.startswith("vllm-") and start_vllm_server:
             self.setup_vllm_server()
 
     def get_project_root(self):
@@ -158,7 +158,12 @@ class Initializer:
         try:
             import vllm
         except ImportError:
-            raise ImportError("If you'd like to use VLLM models, please install the vllm package by running `pip install vllm`.")
+            raise ImportError(
+                "Automatic vLLM startup requires vllm in this environment. "
+                "To avoid dependency conflicts, run a patched vLLM server in a separate "
+                "environment at localhost:8888 and set start_vllm_server=False "
+                "(CLI: --no-start-vllm-server). See README: Optional vLLM server."
+            )
         
         # Validate config path if provided
         if self.vllm_config_path is not None and not os.path.exists(self.vllm_config_path):
