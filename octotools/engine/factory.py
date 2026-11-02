@@ -5,6 +5,16 @@ def create_llm_engine(model_string: str, use_cache: bool = False, is_multimodal:
     Factory function to create appropriate LLM engine instance.
     """
 
+    if model_string.startswith("atlascloud/"):
+        from .atlascloud import ChatAtlasCloud
+
+        return ChatAtlasCloud(
+            model_string=model_string,
+            use_cache=use_cache,
+            is_multimodal=is_multimodal,
+            **kwargs,
+        )
+
     if model_string.startswith("forge/"):
         from .openai import ChatOpenAI
         return ChatOpenAI(model_string=model_string, use_cache=use_cache, is_multimodal=is_multimodal, **kwargs)
@@ -58,7 +68,8 @@ def create_llm_engine(model_string: str, use_cache: bool = False, is_multimodal:
         raise ValueError(
             f"Engine {model_string} not supported. "
             "If you are using Azure OpenAI models, please ensure the model string has the prefix 'azure-'. "
-            "For Together models, use 'together-'. For VLLM models, use 'vllm-'. For LiteLLM models, use 'litellm-'. "
+            "For Atlas Cloud models, use 'atlascloud/'. For Together models, use 'together-'. "
+            "For VLLM models, use 'vllm-'. For LiteLLM models, use 'litellm-'. "
             "For Ollama models, use 'ollama-'. "
             "For other custom engines, you can edit the factory.py file and add its interface file. "
             "Your pull request will be warmly welcomed!"
