@@ -1,5 +1,11 @@
 # Chapter 6: Executor
 
+> **Historical implementation:** This chapter describes the former Python-command
+> dispatcher. The current Executor accepts JSON argument lists and directly calls
+> enabled tools; it does not execute generated Python commands. See the
+> [current command format and security boundaries](../README.md#executor-command-format).
+> The old `exec()` environment and timeouts did not provide security isolation.
+
 Welcome back! In [Chapter 5: Planner](05_planner_.md), we met the "Strategist" of `octotools`. The `Planner` looks at the overall goal (your query), the history ([Memory](04_memory_.md)), and the available tools ([Tool](03_tool_.md)s) to decide *what* needs to happen next and *which* tool should be used.
 
 For example, the `Planner` might decide: "Okay, the next step is to find the capital of France, and we should use the `Web_Search_Tool` for that."
@@ -53,11 +59,11 @@ print(f"Executor received command: {command_string}")
 
 **Step 2: Executing the Tool Command**
 
-Now the Executor has the command string. It needs to run it safely.
+In the historical implementation, the Executor then ran the command string.
 
 1.  **Find the Tool:** It uses the tool name (`Web_Search_Tool`) to locate and load the actual [Tool](03_tool_.md) code and create an instance (an object) of it. Let's call this object `actual_web_search_tool`.
 2.  **Prepare Environment:** It sets up a space to run the command. This includes making the `actual_web_search_tool` object available under the variable name `tool`, just like the LLM was instructed to use in the command string.
-3.  **Run Safely:** It executes the `command_string` within this environment. This is often done using Python's `exec()` function, but with safety measures like timeouts to prevent the tool from running forever.
+3.  **Run the Command:** It executes the `command_string` using Python's `exec()`. A timeout limits some execution paths but does not provide security isolation.
 4.  **Capture Result:** The command string was designed to assign the tool's output to a variable named `execution`. The Executor captures the value of this `execution` variable after the command runs.
 5.  **Return Result:** The Executor returns the captured result (e.g., the string "Paris") to the [Solver](01_solver_.md).
 
@@ -68,12 +74,12 @@ Now the Executor has the command string. It needs to run it safely.
 
 print(f"Executor preparing to run: {command_string}")
 
-# Create a safe place to run the code
+# Create a namespace for the code, not a security sandbox
 execution_environment = {'tool': actual_web_search_tool}
 
 try:
     # Execute the command string in the environment
-    # (Real code uses timeouts and more safety checks)
+    # (Historical code used timeouts without security isolation)
     exec(command_string, globals(), execution_environment)
 
     # Get the result that was assigned to 'execution'
@@ -250,7 +256,7 @@ execution = tool.execute(param1=value1, ...)
         # ... other methods ...
 
         def execute_tool_command(self, tool_name: str, command: str) -> Any:
-            """Loads the tool and executes the generated command string safely."""
+            """Historical execution of a generated command without isolation."""
             results = []
             try:
                 # 1. Load the tool's code dynamically based on its name
@@ -305,7 +311,7 @@ execution = tool.execute(param1=value1, ...)
 
 ## Conclusion
 
-The **Executor** is the "Doer" in `octotools`. It takes the strategic plan from the [Planner](05_planner_.md) (which specifies the tool and sub-goal) and translates it into action. It uses the [LLM Engine](02_llm_engine_.md) to generate the precise Python command needed for the tool, then safely executes that command, handling timeouts and errors, and finally returns the result. It's the crucial link that turns abstract plans into concrete outcomes by operating the specialized [Tool](03_tool_.md)s.
+The **Executor** is the "Doer" in `octotools`. It takes the strategic plan from the [Planner](05_planner_.md) (which specifies the tool and sub-goal) and translates it into action. The historical implementation described here generated and executed Python commands without isolation. The current implementation generates JSON arguments and calls enabled tools directly, as described in the [README](../README.md#executor-command-format).
 
 ## Next Steps
 

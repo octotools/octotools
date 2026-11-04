@@ -231,11 +231,17 @@ class ParallelSearchTests(unittest.TestCase):
             enabled_tools=["Parallel_Search_Tool"], model_string="gpt-4o"
         )
         with tempfile.TemporaryDirectory() as cache_dir, self.transport():
-            executor = Executor(llm_engine_name="gpt-4o")
+            executor = Executor(
+                llm_engine_name="gpt-4o", available_tools=selected.available_tools
+            )
             executor.set_query_cache_dir(cache_dir)
             results = executor.execute_tool_command(
                 selected.available_tools[0],
-                'execution = tool.execute(objective="Python docs", search_queries=["Python official documentation"], session_id="executor-conversation")',
+                json.dumps([{
+                    "objective": "Python docs",
+                    "search_queries": ["Python official documentation"],
+                    "session_id": "executor-conversation",
+                }]),
             )
         self.assertIsInstance(results, list, results)
         self.assertEqual(

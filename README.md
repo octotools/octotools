@@ -12,7 +12,7 @@
 [![GitHub license](https://img.shields.io/badge/License-MIT-green.svg?logo=github)](https://lbesson.mit-license.org/)
 [![Arxiv](https://img.shields.io/badge/arXiv-2502.11271-B31B1B.svg?logo=arxiv)](https://arxiv.org/abs/2502.11271)
 [![Huggingface Demo](https://img.shields.io/badge/Huggingface-Demo-FFD21E.svg?logo=huggingface)](https://huggingface.co/spaces/OctoTools/octotools)
-[![PyPI](https://img.shields.io/badge/octotoolkit-0.3.6-2176BC?logo=python)](https://pypi.org/project/octotoolkit/)
+[![PyPI](https://img.shields.io/badge/octotoolkit-0.3.7-2176BC?logo=python)](https://pypi.org/project/octotoolkit/)
 [![YouTube](https://img.shields.io/badge/YouTube-Tutorial-FF0000?logo=youtube)](https://www.youtube.com/watch?v=4828sGfx7dk)
 [![Website](https://img.shields.io/badge/Website-OctoTools-D41544?logo=octopusdeploy)](https://octotools.github.io/)
 [![Tool Cards](https://img.shields.io/badge/Tool_Cards-OctoTools-2176BC?logo=octopusdeploy)](https://octotools.github.io/#tool-cards)
@@ -254,6 +254,23 @@ More detailed jupyter notebook examples are available in the [examples/notebooks
 
 ## Test Tools in the Toolbox (Need Test Scripts from Github)
 
+**Python execution is optional and is not sandboxed.** The
+`Python_Code_Generator_Tool` is excluded from `enabled_tools=["all"]`. To use it,
+name it explicitly along with any other desired tools:
+
+```python
+solver = construct_solver(
+    enabled_tools=["Generalist_Solution_Generator_Tool", "Python_Code_Generator_Tool"]
+)
+```
+
+This tool runs model-generated code with the permissions of the OctoTools process.
+It can import modules, access files, and use the network. Explicit selection is
+not isolation; use an appropriately isolated environment without sensitive files
+or credentials. Directly instantiating the tool or running its demo also executes
+unsandboxed code. Its timeout is not a security boundary, and the Windows timer
+does not reliably stop executing code.
+
 Using `Python_Code_Generator_Tool` as an example, test the availability of the tool by running the following:
 
 ```sh
@@ -368,7 +385,37 @@ To customize **OctoTools** for your own tasks:
 
 2. **Replace or update existing tools**: You can replace or update tools in the toolbox. For example, we provide the [`Object_Detector_Tool`](https://github.com/octotools/OctoTools/blob/main/octotools/tools/object_detector/tool.py) to detect objects in images using an open-source model. We also provide an alternative tool called the [`Advanced_Object_Detector_Tool`](https://github.com/OctoTools/OctoTools/blob/main/octotools/tools/advanced_object_detector/tool.py) to detect objects in images using API calls.
 
-3. **Enable tools for your tasks**: You can enable the whole toolset or a subset of tools for your own tasks by setting the `enabled_tools` argument in [tasks/solve.py](https://github.com/octotools/OctoTools/blob/main/tasks/solve.py).
+3. **Enable tools for your tasks**: Set `enabled_tools` in [tasks/solve.py](https://github.com/octotools/OctoTools/blob/main/tasks/solve.py). `["all"]` loads tools that allow default loading. Tools such as `Python_Code_Generator_Tool` must be named explicitly. To choose a custom set, list its tool names; `["all", "Python_Code_Generator_Tool"]` does not mean all tools plus Python.
+
+### Executor command format
+
+`ToolCommand.command` remains a string, but now contains a JSON list of argument
+objects for the selected tool. For example:
+
+```json
+[{"query": "AI agents", "num_results": 5}]
+```
+
+Each object becomes one `tool.execute(**arguments)` call. Use `[{}]` for a call
+without arguments. The executor validates the entire batch before calling the
+tool, including parameter names and required arguments. Commands are limited to
+65,536 characters, 16 calls, and a nesting depth of 16 (the outer list is depth 0).
+Duplicate keys and non-finite numbers are rejected.
+
+The executor accepts only tools in its `available_tools` list. The solver supplies
+this list automatically; callers constructing `Executor` directly must pass it.
+An executor without that list cannot dispatch tools.
+
+Existing Python command strings, including commands in old logs, cannot be replayed
+directly. Convert their arguments to JSON. Arbitrary Python preprocessing is no
+longer supported by the dispatcher. Tool cards may retain Python API examples,
+but the model must translate those examples into JSON arguments. Tool `execute()`
+interfaces and the memory/log field names are unchanged.
+
+This removes generated-code execution from tool dispatch, not from the optional
+Python tool. It does not sandbox tool implementations or restrict their legitimate
+file and network operations. Tools remain responsible for validating values and
+resource access.
 
 
 ## Resources

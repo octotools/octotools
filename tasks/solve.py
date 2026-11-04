@@ -358,7 +358,8 @@ def main(args):
     # Instantiate Executor
     executor = Executor(
         llm_engine_name=args.llm_engine_name,
-        root_cache_dir=args.root_cache_dir
+        root_cache_dir=args.root_cache_dir,
+        available_tools=initializer.available_tools,
     )
 
     # Instantiate Solver
