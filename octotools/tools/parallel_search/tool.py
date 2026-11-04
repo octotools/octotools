@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from octotools.tools.base import BaseTool
 
 MCP_URL = "https://search.parallel.ai/mcp"
-USER_AGENT = "OctoTools/0.3.6 (Parallel Search MCP)"
+USER_AGENT = "OctoTools/0.3.7 (Parallel Search MCP)"
 
 
 def _error_text(exc):
