@@ -164,7 +164,7 @@ Let's peek at some relevant code snippets.
     ```python
     # Simplified from octotools/engine/base.py
     from abc import ABC, abstractmethod
-    import diskcache as dc
+    import diskcache_community as dc
     import hashlib
 
     class EngineLM(ABC): # Abstract Base Class
@@ -175,7 +175,7 @@ Let's peek at some relevant code snippets.
     class CachedEngine:
         def __init__(self, cache_path):
             self.cache_path = cache_path
-            # Uses the 'diskcache' library for file-based caching
+            # Uses the 'diskcache-community' library for file-based caching
             self.cache = dc.Cache(cache_path)
 
         def _check_cache(self, prompt: str):
@@ -192,7 +192,7 @@ Let's peek at some relevant code snippets.
             print("SAVED TO CACHE.")
         # ... other cache related methods ...
     ```
-    **Explanation:** `EngineLM` ensures all engines have a consistent `generate` method. `CachedEngine` provides reusable functions (`_check_cache`, `_save_cache`) that specific engines can use if `use_cache=True`. It uses the `diskcache` library to handle the details of saving/loading from files.
+    **Explanation:** `EngineLM` ensures all engines have a consistent `generate` method. `CachedEngine` provides reusable functions (`_check_cache`, `_save_cache`) that specific engines can use if `use_cache=True`. It uses the `diskcache-community` library to handle the details of saving/loading from files.
 
 *   **Specific Engine (`octotools/engine/openai.py`):** Here's a simplified look at how `ChatOpenAI` might implement `generate`.
 

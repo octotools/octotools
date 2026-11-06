@@ -4,7 +4,7 @@ together==1.5.4
 # google-generativeai==0.8.5
 google-genai
 transformers
-diskcache==5.6.3
+diskcache-community>=5.8.3
 easyocr==1.7.2
 metapub==0.5.12
 pillow==11.1.0

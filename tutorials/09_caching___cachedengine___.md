@@ -83,7 +83,7 @@ Let's look closer at what happens inside an engine when `use_cache=True`.
 When you call `engine.generate(prompt)`:
 
 1.  **Create Cache Key:** The engine takes the `prompt` (and often other relevant details like the system prompt if one is used) and creates a unique identifier, usually by "hashing" it. Hashing turns the potentially long input text into a fixed-size, unique string (like a fingerprint). Let's call this the `cache_key`.
-2.  **Check Storage:** The engine accesses its cache storage (managed by the `diskcache` library, which writes to files). It checks if there's an entry stored under this specific `cache_key`.
+2.  **Check Storage:** The engine accesses its cache storage (managed by the `diskcache-community` library, which writes to files). It checks if there's an entry stored under this specific `cache_key`.
 3.  **Cache Hit:** If the `cache_key` exists in the storage:
     *   The engine retrieves the saved response associated with that key.
     *   It immediately returns this saved response. (Fast!)
@@ -125,7 +125,7 @@ sequenceDiagram
     ```python
     # Simplified from octotools/engine/base.py
     import hashlib # For creating the cache key fingerprint
-    import diskcache as dc # The library for file-based caching
+    import diskcache_community as dc # The library for file-based caching
     from abc import ABC, abstractmethod
 
     # Basic definition for any LLM engine
@@ -142,7 +142,7 @@ sequenceDiagram
             super().__init__() # Important for multiple inheritance
             self.cache_path = cache_path
             # Create a cache object linked to a file path
-            # `diskcache` handles reading/writing efficiently
+            # `diskcache-community` handles reading/writing efficiently
             self.cache = dc.Cache(cache_path)
             print(f"  Cache initialized at: {cache_path}")
 
@@ -155,7 +155,7 @@ sequenceDiagram
             """Checks if a response exists in the cache for this prompt."""
             # Use the hashed prompt as the key
             # cache_key = self._hash_prompt(prompt) # Or just use prompt directly if safe
-            cache_key = prompt # diskcache can often handle string keys directly
+            cache_key = prompt # diskcache-community can often handle string keys directly
             if cache_key in self.cache:
                 print("    CACHE HIT!") # Indicate cache was used
                 return self.cache[cache_key] # Return the stored value
@@ -173,8 +173,8 @@ sequenceDiagram
 
     **Explanation:**
     *   `CachedEngine` is designed to be mixed in with specific engine classes.
-    *   `__init__`: Takes a file `cache_path` and creates a `diskcache.Cache` object. This object manages storing and retrieving data from a file (or set of files) at that path.
-    *   `_hash_prompt` (Optional but good practice): Shows how to create a consistent "fingerprint" (`cache_key`) for a given prompt using hashing. (Note: `diskcache` can often use strings directly as keys, so sometimes the raw prompt combined with other relevant info is used as the key).
+    *   `__init__`: Takes a file `cache_path` and creates a `diskcache_community.Cache` object. This object manages storing and retrieving data from a file (or set of files) at that path.
+    *   `_hash_prompt` (Optional but good practice): Shows how to create a consistent "fingerprint" (`cache_key`) for a given prompt using hashing. (Note: `diskcache-community` can often use strings directly as keys, so sometimes the raw prompt combined with other relevant info is used as the key).
     *   `_check_cache`: Takes a prompt (or the generated `cache_key`), checks if it exists as a key in the `self.cache` object using Python's `in` operator, and returns the stored value if found, otherwise `None`.
     *   `_save_cache`: Takes a prompt (or `cache_key`) and the `response`, and stores them in the `self.cache` object like assigning to a dictionary (`self.cache[key] = value`).
 

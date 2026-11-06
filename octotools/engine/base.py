@@ -1,7 +1,7 @@
 # Reference: https://github.com/zou-group/textgrad/blob/main/textgrad/engine/base.py
 
 import hashlib
-import diskcache as dc
+import diskcache_community as dc
 from abc import ABC, abstractmethod
 
 class EngineLM(ABC):
@@ -19,19 +19,24 @@ class CachedEngine:
     def __init__(self, cache_path):
         super().__init__()
         self.cache_path = cache_path
-        self.cache = dc.Cache(cache_path)
+        self.cache = dc.Cache(
+            cache_path,
+            disk=dc.SafeDisk.with_types(
+                modules=("octotools.models.formatters",)
+            ).with_options(on_error="miss"),
+        )
 
     def _hash_prompt(self, prompt: str):
         return hashlib.sha256(f"{prompt}".encode()).hexdigest()
 
     def _check_cache(self, prompt: str):
-        if prompt in self.cache:
-            return self.cache[prompt]
-        else:
-            return None
+        return self.cache.get(prompt)
 
     def _save_cache(self, prompt: str, response: str):
-        self.cache[prompt] = response
+        try:
+            self.cache[prompt] = response
+        except TypeError:
+            pass
 
     def __getstate__(self):
         # Remove the cache from the state before pickling
@@ -42,4 +47,9 @@ class CachedEngine:
     def __setstate__(self, state):
         # Restore the cache after unpickling
         self.__dict__.update(state)
-        self.cache = dc.Cache(self.cache_path)
+        self.cache = dc.Cache(
+            self.cache_path,
+            disk=dc.SafeDisk.with_types(
+                modules=("octotools.models.formatters",)
+            ).with_options(on_error="miss"),
+        )
