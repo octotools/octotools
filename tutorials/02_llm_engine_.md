@@ -164,7 +164,7 @@ Let's peek at some relevant code snippets.
     ```python
     # Simplified from octotools/engine/base.py
     from abc import ABC, abstractmethod
-    import diskcache as dc
+    import diskcache_community as dc
     import hashlib
 
     class EngineLM(ABC): # Abstract Base Class
@@ -175,16 +175,13 @@ Let's peek at some relevant code snippets.
     class CachedEngine:
         def __init__(self, cache_path):
             self.cache_path = cache_path
-            # Uses the 'diskcache' library for file-based caching
-            self.cache = dc.Cache(cache_path)
+            # SafeDisk can read the text responses in this example
+            self.cache = dc.Cache(cache_path, disk=dc.SafeDisk.with_options(on_error="miss"))
 
         def _check_cache(self, prompt: str):
             # Creates a unique hash for the prompt to use as a key
             cache_key = hashlib.sha256(f"{prompt}".encode()).hexdigest()
-            if cache_key in self.cache:
-                print("CACHE HIT!") # Useful for debugging
-                return self.cache[cache_key] # Return saved value
-            return None # Not found in cache
+            return self.cache.get(cache_key) # Missing or rejected entries return None
 
         def _save_cache(self, prompt: str, response: str):
             cache_key = hashlib.sha256(f"{prompt}".encode()).hexdigest()
@@ -192,7 +189,7 @@ Let's peek at some relevant code snippets.
             print("SAVED TO CACHE.")
         # ... other cache related methods ...
     ```
-    **Explanation:** `EngineLM` ensures all engines have a consistent `generate` method. `CachedEngine` provides reusable functions (`_check_cache`, `_save_cache`) that specific engines can use if `use_cache=True`. It uses the `diskcache` library to handle the details of saving/loading from files.
+    **Explanation:** `EngineLM` ensures all engines have a consistent `generate` method. `CachedEngine` provides reusable functions (`_check_cache`, `_save_cache`) that specific engines can use if `use_cache=True`. It uses the `diskcache-community` library to handle the details of saving/loading from files.
 
 *   **Specific Engine (`octotools/engine/openai.py`):** Here's a simplified look at how `ChatOpenAI` might implement `generate`.
 
@@ -222,7 +219,7 @@ Let's peek at some relevant code snippets.
             cache_key = (system_prompt or self.DEFAULT_SYSTEM_PROMPT) + prompt
             if self.use_cache:
                 cached_result = self._check_cache(cache_key)
-                if cached_result:
+                if cached_result is not None:
                     return cached_result # Return from cache if found
 
             # 2. Prepare API Call

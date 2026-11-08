@@ -65,11 +65,14 @@ class ChatOpenAI(EngineLM, CachedEngine):
         system_prompt=DEFAULT_SYSTEM_PROMPT,
         is_multimodal: bool=False,
         use_cache: bool=True, # disable cache for now
+        *,
+        trusted_cache_types: tuple[type, ...] = (),
         **kwargs):
         """
         :param model_string:
         :param system_prompt:
         :param is_multimodal:
+        :param trusted_cache_types: Data-only classes trusted to be unpickled from this cache.
         """
 
         self.use_cache = use_cache
@@ -92,7 +95,7 @@ class ChatOpenAI(EngineLM, CachedEngine):
             cache_path = os.path.join(root, f"cache_openai_{cache_model_string}.db")
             self.image_cache_dir = os.path.join(root, "image_cache")
             os.makedirs(self.image_cache_dir, exist_ok=True)
-            super().__init__(cache_path=cache_path)
+            super().__init__(cache_path=cache_path, trusted_cache_types=trusted_cache_types)
         
         openai_api_key = os.getenv("OPENAI_API_KEY")
         if not self.is_forge and openai_api_key is None:
