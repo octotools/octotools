@@ -20,7 +20,11 @@ from octotools.engine.openai import ChatOpenAI
 
 class ResultScorer:
     def __init__(self, llm_engine=None):
-        self.llm_engine = llm_engine or ChatOpenAI(model_string="gpt-4o-mini", is_multimodal=False, enable_cache=True)
+        self.llm_engine = llm_engine or ChatOpenAI(
+            model_string="gpt-4o-mini",
+            use_cache=True,
+            trusted_cache_types=(AnswerVerification,),
+        )
         print(f"\nLocal OpenAI engine {self.llm_engine.model_string} initialized.\n")
 
     def answer_verification(self, response, correct_answer):

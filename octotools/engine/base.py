@@ -16,15 +16,20 @@ class EngineLM(ABC):
 
 
 class CachedEngine:
-    def __init__(self, cache_path):
+    def __init__(self, cache_path, trusted_cache_types=()):
         super().__init__()
         self.cache_path = cache_path
-        self.cache = dc.Cache(
-            cache_path,
-            disk=dc.SafeDisk.with_types(
-                modules=("octotools.models.formatters",)
-            ).with_options(on_error="miss"),
+        self._trusted_cache_types = tuple(trusted_cache_types)
+        self.cache = self._open_cache()
+
+    def _open_cache(self):
+        from octotools.models import formatters
+
+        disk = dc.SafeDisk.with_types(
+            *getattr(self, "_trusted_cache_types", ()),
+            modules=(formatters.__name__,),
         )
+        return dc.Cache(self.cache_path, disk=disk.with_options(on_error="miss"))
 
     def _hash_prompt(self, prompt: str):
         return hashlib.sha256(f"{prompt}".encode()).hexdigest()
@@ -47,9 +52,4 @@ class CachedEngine:
     def __setstate__(self, state):
         # Restore the cache after unpickling
         self.__dict__.update(state)
-        self.cache = dc.Cache(
-            self.cache_path,
-            disk=dc.SafeDisk.with_types(
-                modules=("octotools.models.formatters",)
-            ).with_options(on_error="miss"),
-        )
+        self.cache = self._open_cache()

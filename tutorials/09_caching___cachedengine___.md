@@ -84,10 +84,10 @@ When you call `engine.generate(prompt)`:
 
 1.  **Create Cache Key:** The engine takes the `prompt` (and often other relevant details like the system prompt if one is used) and creates a unique identifier, usually by "hashing" it. Hashing turns the potentially long input text into a fixed-size, unique string (like a fingerprint). Let's call this the `cache_key`.
 2.  **Check Storage:** The engine accesses its cache storage (managed by the `diskcache-community` library, which writes to files). It checks if there's an entry stored under this specific `cache_key`.
-3.  **Cache Hit:** If the `cache_key` exists in the storage:
+3.  **Cache Hit:** If the lookup returns a saved response:
     *   The engine retrieves the saved response associated with that key.
     *   It immediately returns this saved response. (Fast!)
-4.  **Cache Miss:** If the `cache_key` does *not* exist in the storage:
+4.  **Cache Miss:** If there is no entry or the cache rejects it:
     *   The engine proceeds to contact the external LLM API with the original `prompt`.
     *   It receives the response from the API.
     *   **Crucially:** Before returning the response, it saves it to the cache storage, associating it with the `cache_key` generated in step 1.
@@ -104,11 +104,11 @@ sequenceDiagram
 
     UserCode->>Engine: generate("What is capital of France?")
     Engine->>Engine: Create cache_key (hash of prompt)
-    Engine->>Cache: Check if cache_key exists?
-    alt Cache Hit (Key Exists)
+    Engine->>Cache: Read cached response
+    alt Cache Hit (Saved Response)
         Cache-->>Engine: Return stored response ("Paris")
         Engine-->>UserCode: Return "Paris" (from cache)
-    else Cache Miss (Key Not Found)
+    else Cache Miss (Missing or Rejected Entry)
         Engine->>LLM_API: Send request ("What is capital of France?")
         LLM_API-->>Engine: Receive response ("Paris")
         Engine->>Cache: Save response ("Paris") with cache_key
@@ -142,8 +142,8 @@ sequenceDiagram
             super().__init__() # Important for multiple inheritance
             self.cache_path = cache_path
             # Create a cache object linked to a file path
-            # `diskcache-community` handles reading/writing efficiently
-            self.cache = dc.Cache(cache_path)
+            # SafeDisk can read the text responses in this example
+            self.cache = dc.Cache(cache_path, disk=dc.SafeDisk.with_options(on_error="miss"))
             print(f"  Cache initialized at: {cache_path}")
 
         def _hash_prompt(self, prompt: str) -> str:
@@ -156,13 +156,9 @@ sequenceDiagram
             # Use the hashed prompt as the key
             # cache_key = self._hash_prompt(prompt) # Or just use prompt directly if safe
             cache_key = prompt # diskcache-community can often handle string keys directly
-            if cache_key in self.cache:
-                print("    CACHE HIT!") # Indicate cache was used
-                return self.cache[cache_key] # Return the stored value
-            print("    CACHE MISS.")
-            return None # Not found
+            return self.cache.get(cache_key) # Missing or rejected entries return None
 
-        def _save_cache(self, prompt: str, response: Any):
+        def _save_cache(self, prompt: str, response: str):
             """Saves a response to the cache."""
             # cache_key = self._hash_prompt(prompt)
             cache_key = prompt
@@ -175,12 +171,13 @@ sequenceDiagram
     *   `CachedEngine` is designed to be mixed in with specific engine classes.
     *   `__init__`: Takes a file `cache_path` and creates a `diskcache_community.Cache` object. This object manages storing and retrieving data from a file (or set of files) at that path.
     *   `_hash_prompt` (Optional but good practice): Shows how to create a consistent "fingerprint" (`cache_key`) for a given prompt using hashing. (Note: `diskcache-community` can often use strings directly as keys, so sometimes the raw prompt combined with other relevant info is used as the key).
-    *   `_check_cache`: Takes a prompt (or the generated `cache_key`), checks if it exists as a key in the `self.cache` object using Python's `in` operator, and returns the stored value if found, otherwise `None`.
+    *   `_check_cache`: Takes the cache key and returns the saved response, or `None` if the entry is missing or rejected by `SafeDisk`.
     *   `_save_cache`: Takes a prompt (or `cache_key`) and the `response`, and stores them in the `self.cache` object like assigning to a dictionary (`self.cache[key] = value`).
 
 *   **Using the Cache in a Specific Engine (e.g., `octotools/engine/openai.py`)**
 
     Specific engine classes like `ChatOpenAI` use these `_check_cache` and `_save_cache` methods within their `generate` logic.
+    When passing your own engine to the GAIA scorer, use `ChatOpenAI(model_string="gpt-4o-mini", trusted_cache_types=(AnswerVerification,))` with the scorer's own `AnswerVerification` class.
 
     ```python
     # Simplified from octotools/engine/openai.py

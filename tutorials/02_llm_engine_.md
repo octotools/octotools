@@ -175,16 +175,13 @@ Let's peek at some relevant code snippets.
     class CachedEngine:
         def __init__(self, cache_path):
             self.cache_path = cache_path
-            # Uses the 'diskcache-community' library for file-based caching
-            self.cache = dc.Cache(cache_path)
+            # SafeDisk can read the text responses in this example
+            self.cache = dc.Cache(cache_path, disk=dc.SafeDisk.with_options(on_error="miss"))
 
         def _check_cache(self, prompt: str):
             # Creates a unique hash for the prompt to use as a key
             cache_key = hashlib.sha256(f"{prompt}".encode()).hexdigest()
-            if cache_key in self.cache:
-                print("CACHE HIT!") # Useful for debugging
-                return self.cache[cache_key] # Return saved value
-            return None # Not found in cache
+            return self.cache.get(cache_key) # Missing or rejected entries return None
 
         def _save_cache(self, prompt: str, response: str):
             cache_key = hashlib.sha256(f"{prompt}".encode()).hexdigest()
@@ -222,7 +219,7 @@ Let's peek at some relevant code snippets.
             cache_key = (system_prompt or self.DEFAULT_SYSTEM_PROMPT) + prompt
             if self.use_cache:
                 cached_result = self._check_cache(cache_key)
-                if cached_result:
+                if cached_result is not None:
                     return cached_result # Return from cache if found
 
             # 2. Prepare API Call
