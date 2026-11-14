@@ -1,13 +1,13 @@
 anthropic==0.40.0
 openai==1.75.0
-together==1.5.4
+together==1.6.0
 # google-generativeai==0.8.5
 google-genai
 transformers
 diskcache-community>=5.8.3
 easyocr==1.7.2
 metapub==0.5.12
-pillow==11.1.0
+pillow==13.0.0
 platformdirs==4.3.6
 pymed==0.8.9
 python-dotenv==1.0.1

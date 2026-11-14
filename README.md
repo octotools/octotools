@@ -122,7 +122,7 @@ Currently, there are two ways to install OctoTools. For most use cases, [standar
 Create a conda environment and install the dependencies:
 
 ```sh
-conda create -n octotools python=3.10
+conda create -n octotools python=3.11
 conda activate octotools
 # Alternatively, you can use: `source activate octotools` if the above command does not work
 pip install octotoolkit
@@ -158,7 +158,7 @@ Obtain a Google API Key and Google CX according to the [Google Custom Search API
 
 Start with a fresh new environment:
 ```sh
-conda create -n octotools python=3.10
+conda create -n octotools python=3.11
 conda activate octotools
 ```
 
@@ -181,7 +181,7 @@ sudo apt-get install parallel
 
 ### Optional vLLM server
 
-vLLM is not installed with OctoTools. To use a local vLLM model, run the server in a separate environment on the same machine. vLLM 0.32.0 requires Python 3.11 through 3.14 and newer OpenAI and Pillow packages than OctoTools currently pins. Follow the [vLLM installation guide](https://docs.vllm.ai/en/latest/getting_started/installation/) for your hardware.
+vLLM is not installed with OctoTools. To use a local vLLM model, run the server in a separate environment on the same machine. vLLM 0.32.0 requires Python 3.11 through 3.14 and a newer OpenAI package than OctoTools currently pins. Follow the [vLLM installation guide](https://docs.vllm.ai/en/latest/getting_started/installation/) for your hardware.
 
 In a separate terminal, create the server environment and start a model:
 
