@@ -10,7 +10,7 @@ authors = [
 ]
 description = "An effective and easy-to-use agentic framework with extendable tools for complex reasoning."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dynamic = ["dependencies"]
 
 classifiers = [
@@ -43,7 +43,7 @@ dev = [
 
 [tool.black]
 line-length = 88
-target-version = ['py310']
+target-version = ['py311']
 
 [tool.isort]
 profile = "black"
